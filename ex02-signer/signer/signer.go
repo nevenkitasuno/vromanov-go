@@ -25,6 +25,7 @@ func ExecutePipeline(freeFlowJobs ...job) {
 		go func(jb job) {
 			defer wg.Done()
 			jb(in, out)
+			close(out)
 		}(jb)
 	}
 	wg.Wait()
@@ -69,7 +70,6 @@ func SingleHash(in, out chan interface{}) {
 		fmt.Println(data, "SingleHash result", res)
 	}
 	out <- res
-	close(out)
 }
 
 func MultiHash(in, out chan interface{}) {
@@ -105,7 +105,6 @@ func MultiHash(in, out chan interface{}) {
 	}
 
 	out <- res
-	close(out)
 }
 
 func CombineResults(in, out chan interface{}) {
@@ -126,5 +125,4 @@ func CombineResults(in, out chan interface{}) {
 	}
 
 	out <- sb.String()
-	close(out)
 }
